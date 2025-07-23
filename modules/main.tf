@@ -27,7 +27,7 @@ module "eks_node_group" {
   eks_cluster_name = module.eks_cluster.cluster_name
   node_group_name   = var.node_group_name
   node_role_name    = var.node_role_name
-  nodegroup_keypair = var.nodegroup_keypair
+  # nodegroup_keypair = var.nodegroup_keypair
 
   depends_on = [
     module.eks_cluster,

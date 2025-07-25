@@ -42,11 +42,6 @@ module "eks_node_group" {
 }
 
 terraform {
-  backend "s3" {
-    bucket         = "myeksterraform-bucket"
-    key            = "env-stage/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
-  }
+  backend "s3" {}
 }
+

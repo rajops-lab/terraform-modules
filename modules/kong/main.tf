@@ -1,25 +1,14 @@
- resource "helm_release" "eks_kong" {
-  name             = "king-kong"
-  namespace        = "kong"
+resource "helm_release" "dev-kong" {
+  name             = "kong"
+  repository       = "https://charts.konghq.com"
+  chart            = "kong"
+  namespace        = var.namespace
   create_namespace = true
-
-  repository = "https://charts.konghq.com"
-  chart      = "kong"
-  version    = var.kong_chart_version
-  timeout    = 600
-  dependency_update = true
-
-  values = [
-    file("${path.root}/${var.values_file_path}")
-  ]
+  version          = "2.29.0"
 
   set {
-    name  = "ingressController.installCRDs"
+    name  = "ingressController.enabled"
     value = "true"
   }
-
-  set {
-    name  = "proxy.type"
-    value = var.service_type
-  }
 }
+

@@ -9,3 +9,8 @@ variable "service_type" {
   type        = string
   default     = "LoadBalancer"
 }
+
+variable "values_file_path" {
+  description = "Path to kong-values.yaml from root"
+  type        = string
+}

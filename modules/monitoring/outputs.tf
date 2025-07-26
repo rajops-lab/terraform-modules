@@ -1,4 +1,4 @@
-output "grafana_url" {
-  description = "Grafana endpoint URL"
-  value       = helm_release.kube_prometheus_stack.name
+output "grafana_release_status" {
+  description = "Grafana Helm release status"
+  value       = helm_release.kube_prometheus_stack.status
 }

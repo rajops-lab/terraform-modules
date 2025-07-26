@@ -6,8 +6,10 @@ resource "helm_release" "kube_prometheus_stack" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   version    = var.prometheus_chart_version
+  timeout    = 600
+  dependency_update = true
 
   values = [
-    file("${path.module}/values/monitoring-values.yaml")
+    file("${path.root}/${var.values_file_path}")
   ]
 }

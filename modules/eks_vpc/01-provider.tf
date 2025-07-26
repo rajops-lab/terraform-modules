@@ -17,7 +17,7 @@ provider "aws" {
   default_tags {
     tags = {
       Application = "EKS-Cluster"
-      Tool        = "Terragrunt-managed-resource"
+      Tool        = "Terraform-managed-resource"
     }
   }
 }

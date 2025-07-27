@@ -7,8 +7,8 @@ resource "helm_release" "grafana" {
   version          = "8.0.0"
 
   set {
-    name  = "adminPassword"
-    value = var.admin_password
+    name  = "admin"
+    value = var.grafana_admin_password
   }
 }
 
@@ -17,7 +17,7 @@ variable "namespace" {
   type        = string
   default     = "monitoring"
 }
-variable "admin_password" {
+variable "grafana_admin_password" {
   description = "Grafana admin password"
   type        = string
 }

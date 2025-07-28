@@ -1,10 +1,10 @@
 # Terraform block
 terraform {
-  # required_version = ">= 1.12"  
+  required_version = ">= 1.12"  
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~>6.0" # it will keep major fixed and download latest minor version
+      version = ">=6.0" # ~> will keep major fixed and download latest minor version
     }
   }
 }
@@ -20,8 +20,7 @@ provider "aws" {
   default_tags {
     tags = {
       Application = "EKS-Cluster"
-      Tool        = "Terraform-managed-resource"
-           
+      Tool        = "Terraform-managed-resource"           
     }
   }
 }

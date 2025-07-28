@@ -10,13 +10,13 @@ resource "aws_eks_node_group" "ubuntu_22_ngp" {
   subnet_ids    = var.eks_subnet_ids
 
   scaling_config {
-    desired_size = 3
-    max_size     = 4
+    desired_size = 1
+    max_size     = 1
     min_size     = 1
   }
 
   update_config {
-    max_unavailable = 2 # if something went wrong or downtime at least 1 nodes will be available
+    max_unavailable = 1 # if something went wrong or downtime at least 1 nodes will be available
   }
 
   depends_on = [

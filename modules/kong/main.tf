@@ -6,9 +6,12 @@ resource "helm_release" "dev-kong" {
   create_namespace = true
   version          = "2.29.0"
 
-  set {
-    name  = "ingressController.enabled"
-    value = "true"
-  }
+  values = [
+    yamlencode({
+      ingressController = {
+        enabled = true
+      }
+    })
+  ]
 }
 

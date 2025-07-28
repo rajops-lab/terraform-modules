@@ -6,10 +6,12 @@ resource "helm_release" "grafana" {
   create_namespace = false   # Because monitoring ns is already made by Prometheus module
   version          = "8.0.0"
 
-  set {
-    name  = "admin"
-    value = var.grafana_admin_password
-  }
+  values = [
+    yamlencode({
+      adminUser = "admin"
+      adminPassword = var.grafana_admin_password
+    })
+  ]
 }
 
 variable "namespace" {

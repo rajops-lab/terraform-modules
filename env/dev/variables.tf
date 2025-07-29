@@ -72,3 +72,9 @@ variable "nodegroup_keypair" {
   description = "SSH key pair name for EKS worker nodes"
   type        = string
 }
+
+variable "grafana_admin_password" {
+  description = "Admin password for Grafana"
+  type        = string
+  sensitive   = true
+}

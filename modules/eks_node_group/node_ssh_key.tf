@@ -1,4 +1,9 @@
+resource "tls_private_key" "node_ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
 resource "aws_key_pair" "node_ssh_key" {
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCf81o8Fk5Y65d5H68rG2EwItI1VUFHCdvb++7TqtkN9Ibk3jjFrQz+evbyL2QYqaVdiSz8aJbwAb8Tdwz8TilyS65qr4mDMaZfwr0dsFBddT/J2lp/oXJLG48027Jg6OtKKxNlbdtNMrGZ9IIO2VxH0u+nrBDYePCvZwDYxjdF1bMHApQNBh5g/7mbHasd4SqzuWpFzmpRu+F1Ubqm/1fIR4F767q4jHU+OVbLthcSmGTIMYnQOxfbtpADXRMroK1pT1OJAOT612wXZ+tfwxbX/R8z4rXLIewnQV/5ZwBEusMBMuAMdyvZi6cdu/DVVYOdNzafl28vaYAw5oTeHI+v+tEzfu6CqiatINwQ/2nSCDPjtBVjnxouZWatzWvmi+A50qZVfViWMTQRj6WAALM3DBz7RK0Id+udB3gGk0Wfd78DgqH4HE/lCBFs/XhkocOMTdLdoUenJ5reohFSXXXcYKvBUsfVvNt0YqswZdtybuJEcK7nuWr8jJrEF+O+erIdik9c9dyn/b6FEyExJOlhYspFLjIvDxRj70ZL0Yi9kYHE1kLKYVvy6WIsxCV0QrNWbszSz1rgpOgvoOyxYXnUXgq3Nk6Lz3KwbVaDdLFjg3u9u5oU03Oa4PVvERhhk+ZjymgM2gOeId9S36bOrldzlsvjXuTtAuJwBI52wftrIQ== rajeshavhd@gmail.com"
-  key_name   = "eks_node_key"
+  key_name   = var.nodegroup_keypair
+  public_key = tls_private_key.node_ssh_key.public_key_openssh
 }

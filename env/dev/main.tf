@@ -1,12 +1,7 @@
-# ─── main.tf (for each env: dev, stage, prod) ───
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
+# ─── main.tf (Complete EKS infrastructure with monitoring) ───
 
 module "eks_vpc" {
-  source            = "git::git@github.com:rajops-lab/terraform-modules.git//modules/eks_vpc?ref=v2.0.5"
+  source            = "../../modules/eks_vpc"
   region_name       = var.region_name
   environment       = var.environment
   vpc_cidr_block    = var.vpc_cidr_block
@@ -20,7 +15,7 @@ module "eks_vpc" {
 }
 
 module "eks_cluster" {
-  source                  = "git::git@github.com:rajops-lab/terraform-modules.git//modules/eks_cluster?ref=v2.0.5"
+  source                  = "../../modules/eks_cluster"
   eks_cluster_name        = var.eks_cluster_name
   eks_subnet_ids          = flatten([module.eks_vpc.pub_subnets, module.eks_vpc.priv_subnets])
   cluster_role            = var.cluster_role
@@ -32,7 +27,7 @@ module "eks_cluster" {
 }
 
 module "eks_node_group" {
-  source              = "git::git@github.com:rajops-lab/terraform-modules.git//modules/eks_node_group?ref=v2.0.6"
+  source              = "../../modules/eks_node_group"
   eks_subnet_ids      = flatten([module.eks_vpc.pub_subnets, module.eks_vpc.priv_subnets])
   eks_cluster_name    = module.eks_cluster.cluster_name
   node_group_name     = var.node_group_name
@@ -45,38 +40,70 @@ module "eks_node_group" {
   ]
 }
 
-# Optional backend (for centralized state)
+# Data sources for EKS cluster authentication
+data "aws_eks_cluster" "cluster" {
+  name = module.eks_cluster.cluster_name
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks_cluster.cluster_name
+}
+
+# Kubernetes provider configuration
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+/*
+# Helm provider configuration
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
+  }
+}
+
+module "kong" {
+  source    = "../../modules/kong"
+  namespace = "kong"
+
+  depends_on = [
+    module.eks_cluster,
+    module.eks_node_group
+  ]
+}
+
+module "prometheus" {
+  source    = "../../modules/prometheus"
+  namespace = "monitoring"
+
+  depends_on = [
+    module.eks_cluster,
+    module.eks_node_group
+  ]
+}
+
+module "grafana" {
+  source                 = "../../modules/grafana"
+  namespace              = "monitoring"
+  grafana_admin_password = var.grafana_admin_password
+
+  depends_on = [
+    module.eks_cluster,
+    module.eks_node_group,
+    module.prometheus
+  ]
+}
+*/
+# Backend configuration
 terraform {
   backend "s3" {
     bucket         = "myeksterraform-bucket"
-    key            = "env/dev/terraform.tfstate"  # or stage/prod depending on env
+    key            = "env/dev/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "terraform-locks"
   }
 }
-
-module "kong" {
-  source              = "git::git@github.com:rajops-lab/terraform-modules.git//modules/kong?ref=v2.0.5"
-  kong_chart_version  = "2.24.0"
-  service_type        = "LoadBalancer"
-  values_file_path    = "values/kong-values.yaml"
-
-  depends_on = [
-    module.eks_cluster,
-    module.eks_node_group
-  ]
-}
-
-
-module "monitoring" {
-  source                    = "git::git@github.com:rajops-lab/terraform-modules.git//modules/monitoring?ref=v2.0.6"
-  prometheus_chart_version  = "75.15.0"
-
-  depends_on = [
-    module.eks_cluster,
-    module.eks_node_group
-  ]
-}
-
-

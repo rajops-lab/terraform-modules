@@ -2,7 +2,7 @@ region_name         = "us-east-1"
 environment         = "dev"
 
 eks_cluster_name    = "eks-dev-cluster"
-cluster_role        = "AWSEKSClusterRole"
+cluster_role        = "AWSEKSClusterRole-dev"
 eks_cluster_policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 
 node_group_name     = "dev-node-group"
@@ -24,3 +24,5 @@ pub_sub_tags = {
 priv_sub_tags = {
   "kubernetes.io/role/internal-elb" = "1"
 }
+
+grafana_admin_password = "YourSecurePassword123!"

@@ -2,7 +2,7 @@ region_name         = "us-east-1"
 environment         = "stage"
 
 eks_cluster_name    = "eks-stage-cluster"
-cluster_role        = "AWSEKSClusterRole"
+cluster_role        = "AWSEKSClusterRole-stage"
 eks_cluster_policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 
 node_group_name     = "stage-node-group"

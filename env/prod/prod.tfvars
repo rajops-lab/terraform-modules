@@ -2,7 +2,7 @@ region_name         = "us-east-1"
 environment         = "prod"
 
 eks_cluster_name    = "eks-prod-cluster"
-cluster_role        = "AWSEKSClusterRole"
+cluster_role        = "AWSEKSClusterRole-prod"
 eks_cluster_policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 
 node_group_name     = "prod-node-group"
